@@ -17,6 +17,7 @@
 '''
 
 import unittest
+import re
 
 from hotel import Hotel
 from customer import Customer
@@ -24,16 +25,37 @@ from reservation import Reservation
 
 class HotelTestCase(unittest.TestCase):
     def setUp(self):
-        self.hotel = Hotel(20, 'Rotana', 'Abu Dhabi', 200)
+        self.hotel1 = Hotel(20, 'Rotana', 'Abu Dhabi', 200)
+        self.hotel2 = Hotel(21, 'Sheraton', 'Abu Dhabi', 300)
 
     def tearDown(self):
-        self.hotel.remove_from_list()
+        self.hotel1.remove_from_list()
+        self.hotel2.remove_from_list()
 
     def test_01_add_hotel_to_list(self):
-        self.hotel.add_to_list()
-        #Verify that new_hotel exists in list
-        self.assertTrue(self.hotel.is_added_to_list(),
-                        msg='new hotel should have been in hotels list')
+        self.hotel1.add_to_list()
+        #Verify that hotel1 exists in list
+        self.assertTrue(self.hotel1.is_added_to_list(),
+                        msg='new hotel1 should have been in hotels list')
+        self.hotel2.add_to_list()
+        #Verify that hotel2 and hotel2 exists in list
+        self.assertTrue(self.hotel2.is_added_to_list(),
+                        msg='new hotel2 should have been in hotels list')
+    
+    def test_02_get_hotels_in_city(self):
+        #Verify that no hotels in Abu Dhabi initially exist
+        hotels = Hotel.get_hotels_in_city('Abu Dhabi')
+        self.assertTrue(len(hotels) == 0,
+                        msg='No hotels in Abu Dhabi should have been initially existing')
+        #Add 2 hotels to list
+        self.hotel1.add_to_list()
+        self.hotel2.add_to_list()
+        #Verify that 2 hotels are in Abu Dhabi
+        hotels = Hotel.get_hotels_in_city('Abu Dhabi')
+        self.assertTrue(len(hotels) == 2 and\
+                        hotels[0] == self.hotel1 and\
+                        hotels[1] == self.hotel2,
+                        msg='2 hotels in Abu Dhabi should have been existing')
 
 class ReservationTestCase(unittest.TestCase):
     def setUp(self):
@@ -92,6 +114,7 @@ class ReservationTestCase(unittest.TestCase):
 def suite():
     Suite = unittest.TestSuite()
     Suite.addTest(HotelTestCase('test_01_add_hotel_to_list'))
+    Suite.addTest(HotelTestCase('test_02_get_hotels_in_city'))
     Suite.addTest(ReservationTestCase('test_01_reserve_room_from_24_to_28'))
     Suite.addTest(ReservationTestCase('test_02_reserve_room_from_24_to_26'))
     Suite.addTest(ReservationTestCase('test_03_reserve_room_from_25_to_27'))

@@ -54,3 +54,24 @@ class Hotel():
         for hotel in Hotel.hotels:
             if hotel.name == self.name and hotel.city == self.city:
                 Hotel.hotels.remove(hotel)
+    
+    @staticmethod
+    def get_hotels_in_city(city):
+        hotels_in_city = []
+        if city is None or type(city) is not str:
+            print 'get_hotels_in_city: invalid argument: city'
+            return hotels_in_city
+        for hotel in Hotel.hotels:
+            if hotel.city == city:
+                hotels_in_city.append(hotel)
+        return hotels_in_city
+    
+    @staticmethod         
+    def list_hotels_in_city(city): 
+        hotels_in_city = Hotel.get_hotels_in_city(city)
+        if len(hotels_in_city) == 0:
+            print 'No hotel is found in %s'%city
+        else:
+            print 'Hotels in %s:'%city
+            for hotel in hotels_in_city:
+                print '\tHotel Number: %d, Name: %s, Total Rooms: %d'%(hotel.number, hotel.name, hotel.total_rooms)
